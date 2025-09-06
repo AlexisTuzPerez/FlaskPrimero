@@ -31,7 +31,7 @@ def registrar():
     try:
         cursor, connection = get_db_connection()
         
-        # Test connection before executing query
+
         if not connection or not cursor:
             return jsonify({
                 'message': 'Error de conexión a la base de datos'
@@ -63,7 +63,6 @@ def registrar():
         }), 500
 
     finally:
-        # Safely close connections
         try:
             if cursor:
                 cursor.close()

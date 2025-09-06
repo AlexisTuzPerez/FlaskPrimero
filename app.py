@@ -9,13 +9,13 @@ from routes.usuario import usuario_bp
 def create_app():
     app = Flask(__name__)
     
-    # Set JWT secret key
+
     app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY',"djfvlj")
     
-    # Initialize JWT
+
     jwt = JWTManager(app)
     
-    # Initialize database
+
     init_db(app)
  
     app.register_blueprint(tareas_bp, url_prefix='/tareas')
