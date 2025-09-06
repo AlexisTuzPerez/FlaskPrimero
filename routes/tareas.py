@@ -28,12 +28,12 @@ def create_tarea():
 
     try:
         cursor.execute('INSERT INTO tareas (descripcion) VALUES (%s)', (descripcion,))
-        connection.commit()  # ¡IMPORTANTE! Hacer commit de la transacción
+        connection.commit() 
         return jsonify({
             'message': f"Tarea creada!"
         }), 201
     except Exception as e:
-        connection.rollback()  # Rollback en caso de error
+        connection.rollback() 
         return jsonify({
             'message': f"Error al crear la tarea: {e}"
         }), 500

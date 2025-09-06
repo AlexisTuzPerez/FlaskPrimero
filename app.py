@@ -1,16 +1,25 @@
 from flask import Flask, jsonify
+from flask_jwt_extended import JWTManager
 import os
 from routes.tareas import tareas_bp
-from config.db import init_db
+from config.db import init_db, mysql
+from routes.usuario import usuario_bp
+
 
 def create_app():
     app = Flask(__name__)
     
+    # Set JWT secret key
+    app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY',"djfvlj")
+    
+    # Initialize JWT
+    jwt = JWTManager(app)
+    
     # Initialize database
     init_db(app)
-    
+ 
     app.register_blueprint(tareas_bp, url_prefix='/tareas')
-    
+    app.register_blueprint(usuario_bp, url_prefix='/usuario')
     return app
 
 app = create_app()
@@ -23,3 +32,6 @@ if __name__ == '__main__':
 """ ejecutar: 
 pipenv run python app.py
 """
+
+
+

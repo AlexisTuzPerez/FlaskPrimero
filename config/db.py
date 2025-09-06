@@ -30,10 +30,26 @@ def init_db(app):
 
 def get_db_connection():
     try:
+        # Get a fresh connection
         connection = mysql.connection
-        return connection.cursor(), connection
+        if not connection:
+            raise Exception("No database connection available")
+        
+        # Test the connection
+        cursor = connection.cursor()
+        cursor.execute("SELECT 1")
+        cursor.fetchone()
+        
+        return cursor, connection
     except Exception as e:
         print(f"Database connection error: {e}")
+        # Try to reconnect
+        try:
+            connection = mysql.connection
+            if connection:
+                connection.close()
+        except:
+            pass
         raise Exception(f"Error connecting to database: {e}")
 
 

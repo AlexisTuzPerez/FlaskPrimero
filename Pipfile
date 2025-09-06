@@ -10,6 +10,8 @@ flask-sqlalchemy = "*"
 sqlalchemy = "*"
 pymysql = "*"
 flask-mysqldb = "*"
+flask-jwt-extended = "*"
+flask-bcrypt = "*"
 
 [dev-packages]
 
