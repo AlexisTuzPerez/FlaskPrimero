@@ -1,8 +1,9 @@
 import os 
 from dotenv import load_dotenv
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt, get_jwt_identity
 
+import datetime
 from config.db import get_db_connection
 from flask_bcrypt import Bcrypt
 
@@ -86,39 +87,29 @@ def login():
         }), 400
 
     cursor, connection = get_db_connection()
-    try:
-        cursor.execute('SELECT * FROM usuarios WHERE email = %s', (email,))
-        user = cursor.fetchone()
-        if not user:
-            return jsonify({
-                'message': 'Usuario no encontrado'
-            }), 404
-        
-        if not bcrypt.check_password_hash(user[3], contraseña):
-            return jsonify({
-                'message': 'Contraseña incorrecta'
-            }), 401
-            
-        access_token = create_access_token(identity=user[0])
+    cursor.execute('SELECT * FROM usuarios WHERE email = %s', (email,))
+    user = cursor.fetchone()
+    if user and bcrypt.check_password_hash(user[3], contraseña):
+        expires = datetime.timedelta(minutes=60)
+        access_token = create_access_token(identity=str(user[0]), expires_delta=expires)
         return jsonify({
-            'message': 'Usuario logueado correctamente',
-            'access_token': access_token,
-            'user': {
-                'id': user[0],
-                'nombre': user[1],
-                'email': user[2]
-            }
+            'access_token': access_token
         }), 200
-        
-    except Exception as e:
-        print(f"Error en login: {e}")
+    else:
         return jsonify({
-            'message': f'Error al loguear el usuario: {str(e)}'
-        }), 500
-    finally:
-        cursor.close()
-        connection.close()
+            'message': 'Credenciales incorrectas'
+        }), 401
+  
 
 
-    
-
+@usuario_bp.route('/datos', methods=['GET'])
+@jwt_required()
+def datos():
+    current_user = get_jwt_identity()
+    cursor, connection = get_db_connection()
+    cursor.execute('SELECT * FROM usuarios WHERE id = %s', (current_user,))
+    user = cursor.fetchone()
+    return jsonify({
+        'message': 'Datos del usuario',
+        'user': user
+    }), 200
