@@ -16,11 +16,11 @@ def init_db(app):
     print(f"DB_PORT: {os.getenv('DB_PORT')}")
     
 
-    app.config['MYSQL_HOST'] = os.getenv('DB_HOST', 'turntable.proxy.rlwy.net')
-    app.config['MYSQL_USER'] = os.getenv('DB_USER', 'root')
-    app.config['MYSQL_PASSWORD'] = os.getenv('DB_PASSWORD', 'bZUVyCtCkxyZgeEWJEKOCMZAGfGJGhtq')
-    app.config['MYSQL_DB'] = os.getenv('DB_NAME', 'railway')
-    app.config['MYSQL_PORT'] = int(os.getenv('DB_PORT', 27504))
+    app.config['MYSQL_HOST'] = 'turntable.proxy.rlwy.net'
+    app.config['MYSQL_USER'] = 'root'
+    app.config['MYSQL_PASSWORD'] = 'bZUVyCtCkxyZgeEWJEKOCMZAGfGJGhtq'
+    app.config['MYSQL_DB'] = 'railway'
+    app.config['MYSQL_PORT'] = 27504
     
     mysql.init_app(app)
     print("Database initialized")

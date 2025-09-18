@@ -10,7 +10,7 @@ def create_app():
     app = Flask(__name__)
     
 
-    app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'tu-clave-secreta-super-segura-2024')
+    app.config['JWT_SECRET_KEY'] = 'clave_secreta_muy_segura_aqui'
     
 
     jwt = JWTManager(app)
